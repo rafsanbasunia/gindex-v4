@@ -1,10 +1,10 @@
 // =======Options START=======
 var authConfig = {
-  siteName: "Glory to Heaven",
+  siteName: "3flix",
   hybridpass: "Copy Hybrid Password Generated from Backend",
-  version: "v7.9.6",
-  frontendUrl: "https://glorytoheaven.tk",
-  github_name: "tks18",
+  version: "v8.0.1",
+  frontendUrl: "core.reconrex.workers.dev",
+  github_name: "rafsanbasunia",
   github_repo: "gindex-v4",
   favicon: "https://raw.githubusercontent.com/tks18/infozy/develop/favicon.ico",
   client_id: "client_id",
