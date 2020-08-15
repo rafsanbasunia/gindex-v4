@@ -116,7 +116,7 @@ module.exports = {
     publicPath,
     proxy: {
       "/api": {
-        target: "https://www.3flix.ga/",
+        target: "https://glorytoheaven.tk/",
         ws: true,
         changeOrigin: true,
         pathRewrite: {
