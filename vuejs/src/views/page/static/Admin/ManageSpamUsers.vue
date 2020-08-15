@@ -125,21 +125,8 @@ export default {
   components: {
     Loading,
   },
-  metaInfo() {
-    return {
-      title: this.metatitle,
-      titleTemplate: (titleChunk) => {
-        if(titleChunk && this.siteName){
-          return titleChunk ? `${titleChunk} | ${this.siteName}` : `${this.siteName}`;
-        } else {
-          return "Loading..."
-        }
-      },
-    }
-  },
   data() {
     return {
-      metatitle: "Manage Spam",
       user: {},
       admin: false,
       superadmin: false,
@@ -169,7 +156,6 @@ export default {
   },
   methods: {
     getUsers() {
-      this.metatitle = "Getting Users...";
       this.loading = true;
       if(this.getUserApi.length > 0){
         this.$http.post(this.getUserApi, {
@@ -177,22 +163,18 @@ export default {
         }).then(response => {
           if(response.data.auth && response.data.registered){
             this.loading = false;
-            this.metatitle = "Got Users...";
             this.users = response.data.users;
           } else {
-            this.metatitle = "Request Failed...";
             this.users = [];
             this.loading = false;
           }
         })
       } else {
         this.loading = false;
-        this.metatitle = "Request Failed...";
         console.log("Not Possible")
       }
     },
     getSpamUsers() {
-      this.metatitle = "Getting Spammers...";
       this.loading = true;
       if(this.getUserApi.length > 0){
         this.$http.post(this.getSpamApi, {
@@ -200,22 +182,18 @@ export default {
         }).then(response => {
           if(response.data.auth && response.data.registered){
             this.loading = false;
-            this.metatitle = "Done...";
             this.spamUsers = response.data.users;
           } else {
             this.spamUsers = [];
-            this.metatitle = "Failed...";
             this.loading = false;
           }
         })
       } else {
         this.loading = false;
-        this.metatitle = "Failed...";
         console.log("Not Possible")
       }
     },
     handleAddSpam() {
-      this.metatitle = "Adding Spammers...";
       this.loading = true;
       if(this.addUserEmail.length > 0 && this.addpassword.length > 0){
         this.$http.post(this.postAddSpam, {
@@ -227,15 +205,11 @@ export default {
           if(response.data.auth && response.data.registered){
             this.successmessageVisibility = true;
             this.errormessageVisibility = false;
-            this.metatitle = "Success...";
-            this.$ga.event({eventCategory: "Add Spam",eventAction: "Success"+" - "+this.siteName,eventLabel: "Manage Spam"})
             this.resultmessage = response.data.message;
             this.loading = false;
           } else {
             this.successmessageVisibility = false;
             this.errormessageVisibility = true;
-            this.metatitle = "Failed...";
-            this.$ga.event({eventCategory: "Add Spam",eventAction: "Failed"+" - "+this.siteName,eventLabel: "Manage Spam"})
             this.resultmessage = response.data.message;
             this.loading = false;
           }
@@ -243,7 +217,6 @@ export default {
       }
     },
     handleRemoveSpam() {
-      this.metatitle = "Removing Spammers...";
       this.loading = true;
       if(this.removeUserEmail.length > 0 && this.removepassword.length > 0){
         this.$http.post(this.postSpamApi, {
@@ -254,21 +227,16 @@ export default {
           if(response.data.auth && response.data.deleted){
             this.successmessageVisibility = true;
             this.errormessageVisibility = false;
-            this.metatitle = "Done...";
-            this.$ga.event({eventCategory: "Remove Spam",eventAction: "Success"+" - "+this.siteName,eventLabel: "Manage Spam"})
             this.resultmessage = response.data.message;
             this.loading = false;
           } else {
-            this.metatitle = "Failed...";
             this.successmessageVisibility = false;
             this.errormessageVisibility = true;
-            this.$ga.event({eventCategory: "Remove Spam",eventAction: "Failed"+" - "+this.siteName,eventLabel: "Manage Spam"})
             this.resultmessage = response.data.message;
             this.loading = false;
           }
         })
       } else {
-        this.metatitle = "Failed...";
         console.log("Not Possible")
       }
     }
@@ -278,12 +246,10 @@ export default {
     var userData = initializeUser();
     if(userData.isThere){
       if(userData.type == "hybrid"){
-        this.$ga.event({eventCategory: "User Initialized",eventAction: "Hybrid - "+this.siteName,eventLabel: "Manage Spam",nonInteraction: true})
         this.user = userData.data.user;
         this.logged = userData.data.logged;
         this.loading = userData.data.loading;
       } else if(userData.type == "normal"){
-        this.$ga.event({eventCategory: "User Initialized",eventAction: "Normal - "+this.siteName,eventLabel: "Manage Spam",nonInteraction: true})
         this.user = userData.data.user;
         this.token = userData.data.token;
         this.logged = userData.data.logged;
@@ -296,18 +262,10 @@ export default {
       this.loading = userData.data.loading;
     }
   },
-  computed: {
-    siteName() {
-      return window.gds.filter((item, index) => {
-        return index == this.$route.params.id;
-      })[0];
-    },
-  },
   mounted(){
     this.loading = true;
     if(this.admin && this.superadmin){
       this.addrole = "user",this.removerole = "user";
-      this.roledisabled = false;
       this.getUserApi = window.apiRoutes.getUsers,this.postAddSpam = window.apiRoutes.addSpamUser;
       this.getSpamApi = window.apiRoutes.getSpamUsers,this.postSpamApi = window.apiRoutes.removeSpamUser;
       this.getUsers();
@@ -329,11 +287,6 @@ export default {
     let gddata = getgds(this.$route.params.id);
     this.gds = gddata.gds;
     this.currgd = gddata.current;
-    this.$ga.page({
-      page: this.$route.path,
-      title: "Manage Spam"+" - "+this.siteName,
-      location: window.location.href
-    });
   },
   watch: {
     addrole: function() {

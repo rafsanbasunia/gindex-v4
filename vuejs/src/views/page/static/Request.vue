@@ -68,17 +68,7 @@
                 <div class="b-checkbox is-success is-circular is-inline">
                   <input class="styled has-text-success" type="checkbox" id="terms" name="terms" v-model="checked">
                   <label for="terms">
-                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://raw.githubusercontent.com/rafsanbasunia/gindex-v4/CONTRIBUTING.md" target="_blank">Community Guidelines</a></span>
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div class="field">
-              <div class="control">
-                <div class="b-checkbox is-success is-circular is-inline">
-                  <input class="styled has-text-success" type="checkbox" id="code" name="terms" v-model="codechecked">
-                  <label for="code">
-                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditions.md" target="_blank">Terms and Conditions</a></span>
+                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://raw.githubusercontent.com/rafsanbasunia/gindex-v4/master/CONTRIBUTING.md" target="_blank">Community Guidelines</a></span>
                   </label>
                 </div>
               </div>
@@ -102,7 +92,7 @@
                         <span class="icon">
                           <i class="fab fa-superpowers"></i>
                         </span>
-                        <span> Great !</span>
+                        <span> Nicee</span>
                       </p>
                       <p class="subtitle has-text-dark">Request Content Access</p>
                       <div class="content">
@@ -127,23 +117,10 @@ import 'vue-loading-overlay/dist/vue-loading.css';
       components: {
         Loading,
       },
-      metaInfo() {
-        return {
-          title: this.metatitle,
-          titleTemplate: (titleChunk) => {
-            if(titleChunk && this.siteName){
-              return titleChunk ? `${titleChunk} | ${this.siteName}` : `${this.siteName}`;
-            } else {
-              return "Loading..."
-            }
-          },
-        }
-      },
         props : ["nextUrl"],
         data(){
             return {
                 name : "",
-                metatitle: "Request Access",
                 email : "",
                 emailFocus: "",
                 nameFocus: "",
@@ -165,7 +142,6 @@ import 'vue-loading-overlay/dist/vue-loading.css';
         },
         methods : {
             handleSubmit(e) {
-              this.metatitle = "Requesting Access..."
               this.loading = true;
                 e.preventDefault()
                 if(this.checked){
@@ -183,15 +159,11 @@ import 'vue-loading-overlay/dist/vue-loading.css';
                             this.successmessageVisibility = true;
                             this.errormessageVisibility = false;
                             this.loading = false;
-                            this.metatitle = "Success Requesting...";
-                            this.$ga.event({eventCategory: "User Request",eventAction: "Success - "+" - "+this.siteName,eventLabel: "Request Access"})
                             this.resultmessage = response.data.message
                           } else {
                             this.successmessageVisibility = false;
                             this.errormessageVisibility = true;
                             this.loading = false;
-                            this.metatitle = "Request Failed...";
-                            this.$ga.event({eventCategory: "User Request",eventAction: "Failed - "+" - "+this.siteName,eventLabel: "Request Access"})
                             this.resultmessage = response.data.message
                           }
                         }
@@ -203,7 +175,6 @@ import 'vue-loading-overlay/dist/vue-loading.css';
                     this.successmessageVisibility = false;
                     this.errormessageVisibility = true;
                     this.loading = false;
-                    this.metatitle = "Request Failed...";
                     this.resultmessage = "> You Need to Accept Code of Conduct."
                     this.checked = false;
                   }
@@ -211,7 +182,6 @@ import 'vue-loading-overlay/dist/vue-loading.css';
                   this.successmessageVisibility = false;
                   this.errormessageVisibility = true;
                   this.loading = false;
-                  this.metatitle = "Request Failed...";
                   this.resultmessage = "> You Need to Accept Community Guidelines."
                   this.checked = false;
                 }
@@ -236,13 +206,6 @@ import 'vue-loading-overlay/dist/vue-loading.css';
               }
             }
         },
-        computed: {
-          siteName() {
-            return window.gds.filter((item, index) => {
-              return index == this.$route.params.id;
-            })[0];
-          },
-        },
         mounted() {
           this.checkParams();
         },
@@ -250,11 +213,6 @@ import 'vue-loading-overlay/dist/vue-loading.css';
           let gddata = getgds(this.$route.params.id);
           this.gds = gddata.gds;
           this.currgd = gddata.current;
-          this.$ga.page({
-            page: this.$route.path,
-            title: "Request Access"+" - "+this.siteName,
-            location: window.location.href
-          });
         },
         watch: {
           name: "validateData",
