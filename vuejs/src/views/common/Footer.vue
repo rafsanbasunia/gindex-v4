@@ -8,7 +8,7 @@
         <img width="150" height="75" class="gloryimage" :src="footerLogoLink">
       </div>
       <div class="footpad footicons">
-        <font color='red'>3flix</font> | By <font color='SpringGreen'> ReconRex,MeEk_0 and Doom_bringer</font>
+        <font color='red'>3flix</font> By <font color='Cyan'> ReconRex </font> |  <font color='Cyan'> MeEk_0 </font> |  <font color='Cyan'> Doom_bringer </font>
       </div>
       <div v-if="copyright" class="footpad footer-copyright">
         Copyright&nbsp;<i class="fas fa-copyright"></i> {{ Date.now() | moment("YYYY") }} | &nbsp;{{ sitename }}
