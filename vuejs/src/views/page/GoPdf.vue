@@ -38,31 +38,16 @@
 </template>
 
 <script>
-import { initializeUser, getgds } from "@utils/localUtils";
+import { initializeUser } from "@utils/localUtils";
 import pdf from "vue-pdf/src/vuePdfNoSssNoWorker";
 import Loading from 'vue-loading-overlay';
 import { decode64 } from "@utils/AcrouUtil";
 export default {
-  metaInfo() {
-    return {
-      title: this.metatitle,
-      titleTemplate: (titleChunk) => {
-        if(titleChunk && this.siteName){
-          return titleChunk ? `${titleChunk} | ${this.siteName}` : `${this.siteName}`;
-        } else {
-          return "Loading..."
-        }
-      },
-    }
-  },
   data: function() {
     return {
       user: {},
       token: {},
       mediaUrl: "",
-      metatitle: "",
-      gds: [],
-      currgd: {},
       mediaToken: "",
       mainLoad: false,
       fullpage: true,
@@ -86,11 +71,6 @@ export default {
       }
       return ''
     },
-    siteName() {
-      return window.gds.filter((item, index) => {
-        return index == this.$route.params.id;
-      })[0];
-    },
   },
   methods: {
     checkMobile() {
@@ -103,7 +83,6 @@ export default {
     },
     getUrl(){
       this.mediaUrl = window.location.origin + encodeURI(this.url)+"?player=internal"+"&email="+this.user.email+"&token="+this.token.token;
-      this.metatitle = decodeURIComponent(this.url.split('/').pop().split('.').slice(0,-1).join('.'));
     },
     previousPage() {
       if(this.page == 1){
@@ -127,10 +106,8 @@ export default {
     if(userData.isThere){
       if(userData.type == "hybrid"){
         this.user = userData.data.user;
-        this.$ga.event({eventCategory: "User Initialized",eventAction: "Hybrid - "+this.siteName,eventLabel: "PDF",nonInteraction: true})
         this.logged = userData.data.logged;
       } else if(userData.type == "normal"){
-        this.$ga.event({eventCategory: "User Initialized",eventAction: "Normal - "+this.siteName,eventLabel: "PDF",nonInteraction: true})
         this.user = userData.data.user;
         this.token = userData.data.token;
         this.logged = userData.data.logged;
@@ -146,6 +123,7 @@ export default {
         this.mainLoad = false;
         this.mediaToken = response.data.token;
         this.getUrl();
+        console.log(this.mediaUrl)
       } else {
         this.mainLoad = false;
         this.mediaToken = "";
@@ -156,15 +134,8 @@ export default {
       this.mediaToken = "";
     })
   },
-  created() {
-    let gddata = getgds(this.$route.params.id);
-    this.gds = gddata.gds;
-    this.currgd = gddata.current;
-    this.$ga.page({
-      page: "/PDF/"+this.url.split('/').pop()+"/",
-      title: decodeURIComponent(this.url.split('/').pop().split('.').slice(0,-1).join('.'))+" - "+this.siteName,
-      location: window.location.href
-    });
+  mounted(){
+
   },
   watch: {
     screenWidth: function() {

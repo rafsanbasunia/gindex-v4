@@ -19,31 +19,16 @@
 </template>
 
 <script>
-import { initializeUser, getgds } from "@utils/localUtils";
+import { initializeUser } from "@utils/localUtils";
 import { decode64, checkExtends } from "@utils/AcrouUtil";
 import Loading from 'vue-loading-overlay';
 export default {
-  metaInfo() {
-    return {
-      title: this.metatitle,
-      titleTemplate: (titleChunk) => {
-        if(titleChunk && this.siteName){
-          return titleChunk ? `${titleChunk} | ${this.siteName}` : `${this.siteName}`;
-        } else {
-          return "Loading..."
-        }
-      },
-    }
-  },
   data: function() {
     return {
       obj: "",
       objName: "",
-      metatitle: "",
       user: {},
       token: {},
-      gds: [],
-      currgd: {},
       downloadUrl: "",
       windowWidth: window.innerWidth,
       screenWidth: screen.width,
@@ -63,11 +48,6 @@ export default {
         return decode64(this.$route.params.path);
       }
       return ''
-    },
-    siteName() {
-      return window.gds.filter((item, index) => {
-        return index == this.$route.params.id;
-      })[0];
     },
     checkPath() {
       return checkExtends(this.$route.params.path);
@@ -92,7 +72,6 @@ export default {
       }
     },
     downloadButton() {
-      this.$ga.event({eventCategory: "Other File Download",eventAction: "Download - "+this.siteName,eventLabel: "Others",nonInteraction: true})
       window.open(this.obj);
     }
   },
@@ -103,10 +82,8 @@ export default {
     if(userData.isThere){
       if(userData.type == "hybrid"){
         this.user = userData.data.user;
-        this.$ga.event({eventCategory: "User Initialized",eventAction: "Hybrid - "+this.siteName,eventLabel: "Others",nonInteraction: true})
         this.logged = userData.data.logged;
       } else if(userData.type == "normal"){
-        this.$ga.event({eventCategory: "User Initialized",eventAction: "Normal - "+this.siteName,eventLabel: "Others",nonInteraction: true})
         this.user = userData.data.user;
         this.token = userData.data.token;
         this.logged = userData.data.logged;
@@ -121,8 +98,7 @@ export default {
       if(response.data.auth && response.data.registered && response.data.token){
         this.mainLoad = false;
         this.mediaToken = response.data.token;
-        this.objName = decodeURIComponent(this.url.split('/').pop().split('.').slice(0,-1).join('.'));
-        this.metatitle = this.objName;
+        this.objName = this.url.split('/').pop().split('.').slice(0,-1).join('.');
         this.render();
       } else {
         this.mainLoad = false;
@@ -133,16 +109,6 @@ export default {
       this.mainLoad = false;
       this.mediaToken = "";
     })
-  },
-  created() {
-    let gddata = getgds(this.$route.params.id);
-    this.gds = gddata.gds;
-    this.currgd = gddata.current;
-    this.$ga.page({
-      page: "/Others/"+this.url.split('/').pop()+"/",
-      title: this.url.split('/').pop().split('.').slice(0,-1).join('.')+" - "+this.siteName,
-      location: window.location.href
-    });
   },
   watch: {
     screenWidth: function() {

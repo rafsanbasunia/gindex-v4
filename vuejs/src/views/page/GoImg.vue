@@ -15,33 +15,18 @@
 </template>
 
 <script>
-import { initializeUser, getgds } from "@utils/localUtils";
+import { initializeUser } from "@utils/localUtils";
 import { decode64 } from "@utils/AcrouUtil";
 import Loading from 'vue-loading-overlay';
 export default {
-  metaInfo() {
-    return {
-      title: this.metatitle,
-      titleTemplate: (titleChunk) => {
-        if(titleChunk && this.siteName){
-          return titleChunk ? `${titleChunk} | ${this.siteName}` : `${this.siteName}`;
-        } else {
-          return "Loading..."
-        }
-      },
-    }
-  },
   data: function() {
     return {
       imgurl: "",
-      metatitle: "",
       user: {},
       token: {},
       windowWidth: window.innerWidth,
       screenWidth: screen.width,
       ismobile: false,
-      gds: [],
-      currgd: {},
       mediaToken: "",
       mainLoad: false,
       fullpage: true,
@@ -58,18 +43,12 @@ export default {
       }
       return ''
     },
-    siteName() {
-      return window.gds.filter((item, index) => {
-        return index == this.$route.params.id;
-      })[0];
-    },
   },
   methods: {
     render() {
       let path = window.location.origin + encodeURI(this.url)+"?player=internal"+"&token="+this.token.token+"&email="+this.user.email;
 // Easy to debug in development environment
 // path = process.env.NODE_ENV === "development"? "/api" + path: "";
-      this.metatitle = decodeURIComponent(this.url.split('/').pop().split('.').slice(0,-1).join('.'));
       this.imgurl = path;
     },
     checkMobile() {
@@ -93,10 +72,8 @@ export default {
     if(userData.isThere){
       if(userData.type == "hybrid"){
         this.user = userData.data.user;
-        this.$ga.event({eventCategory: "User Initialized",eventAction: "Hybrid - "+this.siteName,eventLabel: "Image",nonInteraction: true})
         this.logged = userData.data.logged;
       } else if(userData.type == "normal"){
-        this.$ga.event({eventCategory: "User Initialized",eventAction: "Normal - "+this.siteName,eventLabel: "Image",nonInteraction: true})
         this.user = userData.data.user;
         this.token = userData.data.token;
         this.logged = userData.data.logged;
@@ -121,16 +98,6 @@ export default {
       this.mainLoad = false;
       this.mediaToken = "";
     })
-  },
-  created() {
-    let gddata = getgds(this.$route.params.id);
-    this.gds = gddata.gds;
-    this.currgd = gddata.current;
-    this.$ga.page({
-      page: "/Image/"+this.url.split('/').pop()+"/",
-      title: this.url.split('/').pop().split('.').slice(0,-1).join('.')+" - "+this.siteName,
-      location: window.location.href
-    });
   },
   watch: {
     screenWidth: function() {

@@ -85,7 +85,7 @@
                   <div class="b-checkbox is-success is-circular is-inline">
                     <input class="styled has-text-success" type="checkbox" id="code" name="terms" v-model="codechecked">
                     <label for="code">
-                      <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditons.md" target="_blank">Terms and Conditions</a></span>
+                      <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditions.md" target="_blank">Terms and Conditions</a></span>
                     </label>
                   </div>
                 </div>
