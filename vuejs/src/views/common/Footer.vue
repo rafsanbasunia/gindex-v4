@@ -7,17 +7,17 @@
       <div v-if="footerLogo" class="footpad footimage">
         <img width="150" height="75" class="gloryimage" :src="footerLogoLink">
       </div>
-      <div v-if="credit" class="footpad footicons">
-        3flix by ReconRex and Shan
+      <div class="footpad footicons">
+        <font color='red'>3flix</font> | By <font color='SpringGreen'> ReconRex,MeEk_0 and Doom_bringer</font>
       </div>
       <div v-if="copyright" class="footpad footer-copyright">
         Copyright&nbsp;<i class="fas fa-copyright"></i> {{ Date.now() | moment("YYYY") }} | &nbsp;{{ sitename }}
       </div>
       <div v-if="license" class="footpad footer-policy">
-        Licensed under FrontEnd - <a href="https://github.com/tks18/gindex-v4/blob/dark-mode-0-1/LICENSE" target="_blank"> GPL 3.0 </a> | Backend - <a href="https://github.com/tks18/gindex-v4/blob/dark-mode-0-1/vuejs/LICENSE" target="_blank">MIT</a>
+        Licensed under FrontEnd - <a href="https://github.com/rafsanbasunia/gindex-v4/LICENSE" target="_blank"> GPL 3.0 </a> | Backend - <a href="https://github.com/tks18/gindex-v4/blob/dark-mode-0-1/vuejs/LICENSE" target="_blank">MIT</a>
       </div>
       <div v-if="codeofconduct" class="footpad footer-code">
-        Please Read our <a href="https://github.com/tks18/gindex-v4/blob/dark-mode-0-1/CODE_OF_CONDUCT.md" target="_blank">Code of Conduct</a> | <a href="https://raw.githubusercontent.com/tks18/gindex-v4/dark-mode-0-1/CONTRIBUTING.md" target="_blank">Community Guidelines</a>
+        Please Read our <a href="https://github.com/tks18/rafsanbasunia/gindex-v4/CODE_OF_CONDUCT.md" target="_blank">Code of Conduct</a> | <a href="https://raw.githubusercontent.com/tks18/gindex-v4/dark-mode-0-1/CONTRIBUTING.md" target="_blank">Community Guidelines</a>
       </div>
     </div>
   </footer>
@@ -34,7 +34,6 @@ export default {
       license: "",
       codeofconduct: "",
       footerLogo: false,
-      credit: "",
       footerLogoLink: "",
     };
   },
