@@ -6,7 +6,7 @@
       <div class="columns is-multiline is-centered is-vcentered">
         <div class="column has-text-centered is-half">
           <h2 class="title has-text-weight-bold has-text-white">Invite Users</h2>
-          <p class="subtitle is-small has-text-white">(Please Use Considerably As We Have to Incur Mail Costs.)</p>
+          <p class="subtitle is-small has-text-white">(Please Use Considerably As We Have to Incur Mail Costs)</p>
           <article :class=" errorMessage ? 'message is-danger' : 'message is-hidden is-danger'">
             <div class="message-header">
               <p>Error Proccessing</p>
@@ -67,7 +67,7 @@
                 <div class="b-checkbox is-success is-circular is-inline">
                   <input class="styled has-text-success" type="checkbox" id="terms" name="terms" v-model="checked">
                   <label for="terms">
-                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://raw.githubusercontent.com/rafsanbasunia/gindex-v4/CONTRIBUTING.md" target="_blank">Community Guidelines</a></span>
+                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/CONTRIBUTING.md" target="_blank">Community Guidelines</a></span>
                   </label>
                 </div>
               </div>
@@ -77,7 +77,7 @@
                 <div class="b-checkbox is-success is-circular is-inline">
                   <input class="styled has-text-success" type="checkbox" id="code" name="terms" v-model="codechecked">
                   <label for="code">
-                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditions.md" target="_blank">Terms and Conditions</a></span>
+                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditions.md" target="_blank">Terms_and_Conditions</a></span>
                   </label>
                 </div>
               </div>
@@ -104,9 +104,22 @@ export default {
   components: {
     Loading
   },
+  metaInfo() {
+    return {
+      title: this.metatitle,
+      titleTemplate: (titleChunk) => {
+        if(titleChunk && this.siteName){
+          return titleChunk ? `${titleChunk} | ${this.siteName}` : `${this.siteName}`;
+        } else {
+          return "Loading..."
+        }
+      },
+    }
+  },
   props : ["nextUrl"],
   data(){
       return {
+          metatitle: "Invite Users",
           user: {},
           admin: false,
           superadmin: false,
@@ -130,6 +143,7 @@ export default {
     },
     methods : {
         handleSubmit(e) {
+          this.metatitle = "Pulling Your Email Service..."
           this.loading = true;
             e.preventDefault()
             if(this.checked && this.codechecked && this.name.length > 0 && this.email.length > 0 && this.message.length > 0){
@@ -145,16 +159,21 @@ export default {
                       this.loading = false;
                       this.successMessage = true;
                       this.errorMessage = false;
+                      this.metatitle = "Invite Sent...";
+                      this.$ga.event({eventCategory: "Invite",eventAction: "Success"+" - "+this.siteName,eventLabel: "Invite"})
                       this.resultmessage = response.data.message
                     } else {
                       this.loading = false;
                       this.successMessage = false;
                       this.errorMessage = true;
+                      this.metatitle = "Invite Failed...";
+                      this.$ga.event({eventCategory: "Invite",eventAction: "Failed"+" - "+this.siteName,eventLabel: "Invite"})
                       this.resultmessage = response.data.message
                     }
                   }
               })
               .catch(error => {
+                  this.metatitle = "Invite Failed...";
                   this.resultmessage = error;
                   this.successMessage = false;
                   this.errorMessage = true;
@@ -163,6 +182,7 @@ export default {
               this.loading = false;
               this.successMessage = false;
               this.errorMessage = true;
+              this.metatitle = "Invite Failed...";
               this.resultmessage = "> You Need to Accept Community Guidelines."
               this.checked = false;
             }
@@ -184,17 +204,24 @@ export default {
         } else {
           return true
         }
-      }
+      },
+      siteName() {
+        return window.gds.filter((item, index) => {
+          return index == this.$route.params.id;
+        })[0];
+      },
     },
     beforeMount() {
       this.loading = true;
       var userData = initializeUser();
       if(userData.isThere){
         if(userData.type == "hybrid"){
+          this.$ga.event({eventCategory: "User Initialized",eventAction: "Hybrid - "+this.siteName,eventLabel: "Invite",nonInteraction: true})
           this.user = userData.data.user;
           this.logged = userData.data.logged;
           this.loading = userData.data.loading;
         } else if(userData.type == "normal"){
+          this.$ga.event({eventCategory: "User Initialized",eventAction: "Normal - "+this.siteName,eventLabel: "Invite",nonInteraction: true})
           this.user = userData.data.user;
           this.token = userData.data.token;
           this.logged = userData.data.logged;
@@ -224,6 +251,11 @@ export default {
       let gddata = getgds(this.$route.params.id);
       this.gds = gddata.gds;
       this.currgd = gddata.current;
+      this.$ga.page({
+        page: this.$route.path,
+        title: "Invite"+" - "+this.siteName,
+        location: window.location.href
+      });
     },
     watch: {
       role: function() {

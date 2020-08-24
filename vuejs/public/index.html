@@ -207,6 +207,7 @@
       inviteAdmin: 'http://localhost:3000/invite/admin',
       inviteSuperAdmin: 'http://localhost:3000/invite/superadmin',
       addSpamUser: 'http://localhost:3000/spam/user',
+      quickaddSpam: 'http://localhost:3000/spam/quickadd',
       addSpamAdmin: 'http://localhost:3000/spam/admin',
       addSpamSuperAdmin: 'http://localhost:3000/spam/superadmin',
       removeSpamUser: 'http://localhost:3000/spam/remove/user',
@@ -224,7 +225,9 @@
       forgotPass: 'http://localhost:3000/user/forgotpass',
       getAll: 'http://localhost:3000/get/all',
       getAdmins: 'http://localhost:3000/get/admins',
-      getSuperAdmins: 'http://localhost:3000/get/superadmins'
+      getSuperAdmins: 'http://localhost:3000/get/superadmins',
+      setSiteSettings: 'http://localhost:3000/user/sitesettings',
+      getSiteSettings: 'http://localhost:3000/get/sitesettings'
     }
     window.gdconfig = JSON.parse(JSON.stringify({ version: authConfig.version, themeOptions: themeOptions }));
     window.apiRoutes = routes;

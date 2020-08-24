@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { initializeUser } from "@utils/localUtils";
+import { initializeUser, getgds } from "@utils/localUtils";
 import { get_file, decode64 } from "@utils/AcrouUtil";
 import { codemirror } from 'vue-codemirror'
 import Loading from 'vue-loading-overlay';
@@ -20,8 +20,21 @@ import 'codemirror/mode/javascript/javascript.js'
 // import theme style
 import 'codemirror/theme/base16-dark.css'
 export default {
+  metaInfo() {
+    return {
+      title: this.metatitle,
+      titleTemplate: (titleChunk) => {
+        if(titleChunk && this.siteName){
+          return titleChunk ? `${titleChunk} | ${this.siteName}` : `${this.siteName}`;
+        } else {
+          return "Loading..."
+        }
+      },
+    }
+  },
   data: function () {
     return {
+      metatitle: "",
       path: "",
       content: "",
       user: {},
@@ -30,6 +43,8 @@ export default {
       screenWidth: screen.width,
       ismobile: false,
       mediaToken: "",
+      gds: [],
+      currgd: {},
       mainLoad: false,
       fullpage: true,
       cmOptions: {
@@ -47,7 +62,12 @@ export default {
         return decode64(this.$route.params.path);
       }
       return ''
-    }
+    },
+    siteName() {
+      return window.gds.filter((item, index) => {
+        return index == this.$route.params.id;
+      })[0];
+    },
   },
   components: {
     codemirror,
@@ -56,6 +76,7 @@ export default {
   methods: {
     render () {
       let path = window.location.origin + encodeURI(this.url)+"?player=internal"+"&email="+this.user.email+"&token="+this.token.token;
+      this.metatitle = decodeURIComponent(this.url.split('/').pop().split('.').slice(0,-1).join('.'));
       this.content = this.$t("page.text.loading");
       get_file({ path: path, file: {} }, data => {
         this.content = data;
@@ -77,8 +98,10 @@ export default {
     if(userData.isThere){
       if(userData.type == "hybrid"){
         this.user = userData.data.user;
+        this.$ga.event({eventCategory: "User Initialized",eventAction: "Hybrid - "+this.siteName,eventLabel: "Text",nonInteraction: true})
         this.logged = userData.data.logged;
       } else if(userData.type == "normal"){
+        this.$ga.event({eventCategory: "User Initialized",eventAction: "Normal - "+this.siteName,eventLabel: "Text",nonInteraction: true})
         this.user = userData.data.user;
         this.token = userData.data.token;
         this.logged = userData.data.logged;
@@ -103,6 +126,16 @@ export default {
       this.mainLoad = false;
       this.mediaToken = "";
     })
+  },
+  created() {
+    let gddata = getgds(this.$route.params.id);
+    this.gds = gddata.gds;
+    this.currgd = gddata.current;
+    this.$ga.page({
+      page: "/Text/"+this.url.split('/').pop()+"/",
+      title: decodeURIComponent(this.url.split('/').pop().split('.').slice(0,-1).join('.'))+" - "+this.siteName,
+      location: window.location.href
+    });
   },
   watch: {
     screenWidth: function() {

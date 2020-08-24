@@ -78,7 +78,7 @@
                 <div class="b-checkbox is-success is-circular is-inline">
                   <input class="styled has-text-success" type="checkbox" id="code" name="terms" v-model="codechecked">
                   <label for="code">
-                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditions.md" target="_blank">Terms and Conditions</a></span>
+                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditions.md" target="_blank">Terms_and_Conditions</a></span>
                   </label>
                 </div>
               </div>
@@ -102,7 +102,7 @@
                         <span class="icon">
                           <i class="fab fa-superpowers"></i>
                         </span>
-                        <span> Great !</span>
+                        <span> Nicee</span>
                       </p>
                       <p class="subtitle has-text-dark">Request Content Access</p>
                       <div class="content">
@@ -242,6 +242,21 @@ import 'vue-loading-overlay/dist/vue-loading.css';
               return index == this.$route.params.id;
             })[0];
           },
+        },
+        beforeMount(){
+          this.loading = true;
+          this.$http.post(window.apiRoutes.getSiteSettings).then(response => {
+            if(response.data.auth && response.data.registered){
+              if(response.data.data.requests){
+                this.loading = false;
+              } else {
+                this.loading = false;
+                this.$router.push({ name: 'results', params: {id: this.currgd.id, cmd: 'result', success: false, data: "User Requests are Closed by the Admin. Please Try Afterwards or Contact Admins.", noredirect: true} })
+              }
+            } else {
+              this.loading = false;
+            }
+          })
         },
         mounted() {
           this.checkParams();

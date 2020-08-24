@@ -1,10 +1,10 @@
 // =======Options START=======
 var authConfig = {
-  siteName: "Glory to Heaven",
+  siteName: "",
   hybridpass: "Copy Hybrid Password Generated from Backend",
-  version: "v7.9.6",
-  frontendUrl: "https://glorytoheaven.tk",
-  github_name: "tks18",
+  version: "v8.0.17",
+  frontendUrl: "",
+  github_name: "rafsanbasunia",
   github_repo: "gindex-v4",
   favicon: "https://raw.githubusercontent.com/tks18/infozy/develop/favicon.ico",
   client_id: "client_id",
@@ -201,6 +201,7 @@ var routes = {
   getSpamUsers: authConfig.backendSite + '/get/spam/users',
   getSpamAdmins: authConfig.backendSite + '/get/spam/admins',
   getSpamSuperadmins: authConfig.backendSite + '/get/spam/superadmins',
+  quickaddSpam: authConfig.backendSite + '/spam/quickadd',
   deleteUser: authConfig.backendSite + '/delete/user',
   deleteMe: authConfig.backendSite + '/user/delete',
   deleteAdmin: authConfig.backendSite + '/delete/admin',
@@ -210,7 +211,9 @@ var routes = {
   getUsers: authConfig.backendSite + '/get/users',
   getAll: authConfig.backendSite + '/get/all',
   getAdmins: authConfig.backendSite + '/get/admins',
-  getSuperAdmins: authConfig.backendSite + '/get/superadmins'
+  getSuperAdmins: authConfig.backendSite + '/get/superadmins',
+  setSiteSettings: authConfig.backendSite + '/user/sitesettings',
+  getSiteSettings: authConfig.backendSite + '/get/sitesettings'
 };
 // =======Options END=======
 
@@ -249,7 +252,6 @@ const CONSTS = {
 var gds = [];
 
 function html(current_drive_order = 0, model = {}) {
-    var data = returnVue();
   return `
 <!DOCTYPE html>
 <html>
@@ -311,7 +313,6 @@ function html(current_drive_order = 0, model = {}) {
     window.MODEL = JSON.parse('${JSON.stringify(model)}');
     window.current_drive_order = ${current_drive_order};
   </script>
-  ${data}
 </head>
 <body>
     <div id="app"></div>
@@ -1215,19 +1216,6 @@ class googleDrive {
       }, ms);
     });
   }
-}
-
-function returnVue() {
-    return `
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-156929545-2"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'UA-156929545-2');
-        </script>
-    `
 }
 
 String.prototype.trim = function (char) {

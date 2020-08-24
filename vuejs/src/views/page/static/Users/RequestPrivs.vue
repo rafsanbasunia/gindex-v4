@@ -75,7 +75,7 @@
                   <div class="b-checkbox is-success is-circular is-inline">
                     <input class="styled has-text-success" type="checkbox" id="terms" name="terms" v-model="checked">
                     <label for="terms">
-                      <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://raw.githubusercontent.com/rafsanbasunia/gindex-v4/CONTRIBUTING.md" target="_blank">Community Guidelines</a></span>
+                      <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/CONTRIBUTING.md" target="_blank">Community Guidelines</a></span>
                     </label>
                   </div>
                 </div>
@@ -85,7 +85,7 @@
                   <div class="b-checkbox is-success is-circular is-inline">
                     <input class="styled has-text-success" type="checkbox" id="code" name="terms" v-model="codechecked">
                     <label for="code">
-                      <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditons.md" target="_blank">Terms and Conditions</a></span>
+                      <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditions.md" target="_blank">Terms_and_Conditions</a></span>
                     </label>
                   </div>
                 </div>
@@ -199,9 +199,22 @@ import 'vue-loading-overlay/dist/vue-loading.css';
       components: {
         Loading
       },
+      metaInfo() {
+        return {
+          title: this.metatitle,
+          titleTemplate: (titleChunk) => {
+            if(titleChunk && this.siteName){
+              return titleChunk ? `${titleChunk} | ${this.siteName}` : `${this.siteName}`;
+            } else {
+              return "Loading..."
+            }
+          },
+        }
+      },
         props : ["nextUrl"],
         data(){
             return {
+                metatitle: "Previlege Request",
                 user: {},
                 admin: false,
                 superadmin: false,
@@ -224,6 +237,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
         },
         methods : {
             handleSubmit(e) {
+              this.metatitle = "Verifying Your Details.."
               this.loading = true;
                 e.preventDefault()
                 if(this.checked && this.codechecked){
@@ -237,11 +251,15 @@ import 'vue-loading-overlay/dist/vue-loading.css';
                         if(response.data.auth && response.data.registered){
                           this.successMessage = true;
                           this.errorMessage = false;
+                          this.metatitle = "Request Sent...";
+                          this.$ga.event({eventCategory: "Previlege Request",eventAction: "Success"+" - "+this.siteName,eventLabel: "Request Previleges"})
                           this.loading = false;
                           this.resultmessage = response.data.message
                         } else {
                           this.successMessage = false;
                           this.errorMessage = true;
+                          this.metatitle = "Request Failed...";
+                          this.$ga.event({eventCategory: "Previlege Request",eventAction: "Failed"+" - "+this.siteName,eventLabel: "Request Previleges"})
                           this.loading = false;
                           this.resultmessage = response.data.message
                         }
@@ -253,6 +271,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
                 } else {
                   this.successMessage = false;
                   this.errorMessage = true;
+                  this.metatitle = "Request Failed...";
                   this.loading = false;
                   this.resultmessage = "You Need to Accept Community Guidelines."
                 }
@@ -273,9 +292,27 @@ import 'vue-loading-overlay/dist/vue-loading.css';
             } else {
               return true
             }
-          }
+          },
+          siteName() {
+            return window.gds.filter((item, index) => {
+              return index == this.$route.params.id;
+            })[0];
+          },
         },
         beforeMount() {
+          this.loading = true;
+          this.$http.post(window.apiRoutes.getSiteSettings).then(response => {
+            if(response.data.auth && response.data.registered){
+              if(response.data.data.adminRequests){
+                this.loading = false;
+              } else {
+                this.loading = false;
+                this.$router.push({ name: 'results', params: {id: this.currgd.id, cmd: 'result', success: false, data: "User Requests are Closed by the Admin. Please Try Afterwards or Contact Admins.", noredirect: true} })
+              }
+            } else {
+              this.loading = false;
+            }
+          })
           this.loading = true;
           var userData = initializeUser();
           if(userData.isThere){
@@ -296,10 +333,28 @@ import 'vue-loading-overlay/dist/vue-loading.css';
             this.loading = userData.data.loading;
           }
         },
+        mounted(){
+          this.loading = true;
+          if(!this.admin && !this.superadmin){
+            this.apiurl = window.apiRoutes.requestadminroute;
+            this.role = 'admin', this.loading = false;
+          } else if(this.admin && !this.superadmin) {
+            this.apiurl = window.apiRoutes.requestsuperadminroute;
+            this.role = "superadmin", this.loading = false;
+          } else {
+            this.loading = false;
+            this.$router.push({ name: 'results', params: { id: this.currgd.id, cmd: "result", success: false, data: "You are Already a Admin or SuperAdmin", redirectUrl: "/", tocmd: "home" } })
+          }
+        },
         created() {
           let gddata = getgds(this.$route.params.id);
           this.gds = gddata.gds;
           this.currgd = gddata.current;
+          this.$ga.page({
+            page: this.$route.path,
+            title: "Previleges Request"+" - "+this.siteName,
+            location: window.location.href
+          });
         },
         watch: {
           role: "validateData",
