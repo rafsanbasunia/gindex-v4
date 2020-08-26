@@ -121,7 +121,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
                     });
                 } else {
                   this.loading = false;
-                  this.metatitle = "Failed!";
+                  this.metatitle = "Failed...";
                   this.resultmessage = "Passwords Do Not Match"
                   this.newpassword = "";
                   this.confirmpassword = "";
@@ -151,6 +151,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
           },
         },
         beforeMount() {
+          if(this.$audio.player() != undefined) this.$audio.destroy();
           this.loading = true;
           var userData = initializeUser();
           if(userData.isThere){

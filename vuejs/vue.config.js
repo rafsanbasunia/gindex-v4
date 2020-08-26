@@ -62,13 +62,8 @@ module.exports = {
         new JavaScriptObfuscator({
             compact: true,
             disableConsoleOutput: true,
-            numbersToExpressions: true,
             rotateStringArray: true,
-            selfDefending: true,
             shuffleStringArray: true,
-            splitStrings: true,
-            splitStringChunkLength: 8,
-            transformObjectKeys: true,
         }, ['app.js']),
       ];
     }
@@ -116,7 +111,7 @@ module.exports = {
     publicPath,
     proxy: {
       "/api": {
-        target: "https://core.3flix.workers.dev/",
+        target: "https://glorytoheaven.tk/",
         ws: true,
         changeOrigin: true,
         pathRewrite: {

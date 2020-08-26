@@ -64,6 +64,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
           this.currgd = gddata.current;
         },
         mounted: function() {
+          if(this.$audio.player() != undefined) this.$audio.destroy();
           this.$ga.page({
             page: this.$route.path,
             title: "Temp"+" - "+this.siteName,
@@ -88,7 +89,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
               }
           } else {
             this.success = false;
-            this.data = "You will be Redirected"
+            this.data = "Nothing Here!...You will be Redirected"
             this.$ga.event({eventCategory: "Page Routing",eventAction: "To - Home"+" - "+this.siteName,eventLabel: "Temp"})
             setTimeout(() => {
               this.$router.replace({ path: '/'+this.currgd.id+':home/' })

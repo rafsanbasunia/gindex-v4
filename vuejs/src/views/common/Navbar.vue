@@ -6,7 +6,7 @@
       </div>
       <div class="navbar-brand">
         <div class="navbar-item nav-link">
-          <h3 class="title has-text-netflix is-3" @click="homeroute">
+          <h3 class="title has-text-netflix is-3" v-tooltip.bottom-start="'Home'" @click="homeroute">
             {{ currgd.name }}
           </h3>
         </div>
@@ -32,7 +32,7 @@
         <div class="navbar-start">
           <a
             class="navbar-item"
-            title="OTP Registration"
+            v-tooltip.bottom-start="'OTP Registration'"
             v-if="!logged"
             @click="gotoPage('/otp/', 'register')"
            >
@@ -40,7 +40,7 @@
           </a>
           <a
             class="navbar-item"
-            title="Request Access"
+            v-tooltip.bottom-start="'Request Access'"
             v-if="!logged"
             @click="gotoPage('/request/user/', 'register')"
            >
@@ -48,7 +48,7 @@
           </a>
           <a
             class="navbar-item"
-            title="Login"
+            v-tooltip.bottom-start="'Login'"
             v-if="!logged"
             @click="gotoPage('/', 'login')"
            >
@@ -58,7 +58,7 @@
             class="navbar-item"
             v-show="logged"
             v-for="(link, index) in quicklinks.slice(0,3)"
-            :title="link.displayname"
+            v-tooltip.bottom-start="link.displayname"
             v-bind:key="index"
             @click="gotoPage('/'+ link.link + '/')"
            >
@@ -66,11 +66,12 @@
           </a>
           <a
             class="navbar-item"
+            v-tooltip.bottom-start="'Go to Root'"
             v-show="logged"
             title="All"
             @click="gotoPage('/')"
            >
-          <span>Server</span>
+          <span>View All</span>
           </a>
           <div
             :class="ismobile ? gddropdown ? 'navbar-item has-dropdown is-active' : 'navbar-item has-dropdown' : 'navbar-item has-dropdown is-hoverable' "
@@ -103,17 +104,31 @@
               >
             </div>
           </div>
-          <div v-if="logged" class="navbar-item" v-show="showSearch">
+          <a
+            class="navbar-item"
+            v-tooltip.bottom-start="'Search'"
+            v-if="logged && !searchBar"
+            @click="searchBar = true"
+           >
+            <span class="icon">
+              <i class="fas fa-search"></i>
+            </span>
+            <span  class="is-hidden-desktop">Search</span>
+          </a>
+          <div v-if="logged" class="navbar-item" v-show="showSearch && searchBar">
             <div class="field is-grouped">
               <p class="control has-icons-right is-dark" style="width:100%;">
                 <input
                   class="input is-rounded search-input"
                   @keyup.enter="query"
+                  @keyup.esc="searchBar = !searchBar"
+                  v-tooltip.bottom-start="'Search the Drive'"
                   v-model="param"
                   type="search"
+                  autofocus
                   :placeholder="$t('search.placeholder')"
                 />
-                <span class="icon is-small is-right" style="padding:0 5px;">
+                <span class="icon is-small is-right">
                   <i class="fas fa-search"></i>
                 </span>
               </p>
@@ -121,7 +136,20 @@
           </div>
           <a
             class="navbar-item"
+            title="Logout"
+            v-tooltip.bottom-start="'Stop Music Player'"
+            @click="closeMusicPlayer()"
+            v-if="logged && miniplayer"
+           >
+           <span class="icon">
+            <i class="fas fa-volume-mute"></i>
+          </span>
+          <span class="is-hidden-desktop">Stop Player</span>
+          </a>
+          <a
+            class="navbar-item"
             title="Profile"
+            v-tooltip.bottom-start="'Go to Settings'"
             @click="gotoPage('/' ,'settings')"
             v-if="logged"
            >
@@ -133,6 +161,7 @@
           <a
             class="navbar-item"
             title="Admin Panel"
+            v-tooltip.bottom-start="'Admin Panel'"
             v-if="logged && admin"
             @click="gotoPage('/','admin')"
            >
@@ -144,6 +173,7 @@
           <a
             class="navbar-item"
             title="Logout"
+            v-tooltip.bottom-start="'Logout'"
             @click="logout"
             v-if="logged"
            >
@@ -183,6 +213,13 @@ export default {
       this.loginorout();
       this.changeNavbarStyle()
     })
+    this.$bus.$on("music-toggled", () => {
+      if(this.$audio.player() == undefined){
+        this.miniplayer = false;
+      } else if(this.$audio.player() != undefined){
+        this.miniplayer = true;
+      }
+    })
     this.$bus.$on('td', () => {
       this.quicklinks = window.quickLinks.filter((links) => {
         return links.root == this.gdindex
@@ -218,7 +255,9 @@ export default {
       navbarStyle: "",
       netflix_black: false,
       mouseover: false,
+      miniplayer: false,
       backgroundClass: "",
+      searchBar: false,
       fullpage: true,
       logged: false,
       admin: false,
@@ -333,6 +372,11 @@ export default {
         this.navbarStyle = "black";
         this.backgroundClass = "none";
       }
+    },
+    closeMusicPlayer(){
+      if(this.$audio.player() == undefined) return;
+      this.$audio.destroy();
+      this.$bus.$emit("music-toggled", "Music Toggled")
     }
   },
   computed: {

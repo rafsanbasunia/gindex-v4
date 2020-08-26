@@ -75,7 +75,7 @@
                   <div class="b-checkbox is-success is-circular is-inline">
                     <input class="styled has-text-success" type="checkbox" id="terms" name="terms" v-model="checked">
                     <label for="terms">
-                      <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/CONTRIBUTING.md" target="_blank">Community Guidelines</a></span>
+                      <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://raw.githubusercontent.com/tks18/gindex-v4/dark-mode-0-1/CONTRIBUTING.md" target="_blank">Community Guidelines</a></span>
                     </label>
                   </div>
                 </div>
@@ -85,7 +85,7 @@
                   <div class="b-checkbox is-success is-circular is-inline">
                     <input class="styled has-text-success" type="checkbox" id="code" name="terms" v-model="codechecked">
                     <label for="code">
-                      <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditions.md" target="_blank">Terms_and_Conditions</a></span>
+                      <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/tks18/gindex-v4/blob/dark-mode-0-1/CODE_OF_CONDUCT.md" target="_blank">Code of Conduct</a></span>
                     </label>
                   </div>
                 </div>

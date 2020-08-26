@@ -8,16 +8,16 @@
         <img width="150" height="75" class="gloryimage" :src="footerLogoLink">
       </div>
       <div class="footpad footicons">
-         <font color='red'>3flix</font> | 2020 
+        Github - <a class="icon-tag" href="https://github.com/tks18/gindex-v4">Shan.tk</a> | Support Me!
       </div>
       <div v-if="copyright" class="footpad footer-copyright">
-        Copyright&nbsp;<i class="fas fa-copyright"></i> {{ Date.now() | moment("YYYY") }} | &nbsp;{{ sitename }}
+        Copyright&nbsp;<i class="fas fa-copyright"></i> {{ Date.now() | moment("YYYY") }} | &nbsp;{{ siteTitle }}
       </div>
       <div v-if="license" class="footpad footer-policy">
-        Licensed under FrontEnd - <a href="https://github.com/rafsanbasunia/gindex-v4/LICENSE" target="_blank"> GPL 3.0 </a> | Backend - <a href="https://github.com/rafsanbasunia/gindex-v4/vuejs/LICENSE" target="_blank">MIT</a>
+        Licensed under FrontEnd - <a href="https://github.com/tks18/gindex-v4/blob/dark-mode-0-1/LICENSE" target="_blank"> GPL 3.0 </a> | Backend - <a href="https://github.com/tks18/gindex-v4/blob/dark-mode-0-1/vuejs/LICENSE" target="_blank">MIT</a>
       </div>
       <div v-if="codeofconduct" class="footpad footer-code">
-        Please Read our <a href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditions.md" target="_blank">Terms_and_Conditions</a> | <a href="https://github.com/rafsanbasunia/gindex-v4/CONTRIBUTING.md" target="_blank">Community Guidelines</a>
+        Please Read our <a href="https://github.com/tks18/gindex-v4/blob/dark-mode-0-1/CODE_OF_CONDUCT.md" target="_blank">Code of Conduct</a> | <a href="https://raw.githubusercontent.com/tks18/gindex-v4/dark-mode-0-1/CONTRIBUTING.md" target="_blank">Community Guidelines</a>
       </div>
     </div>
   </footer>
@@ -39,6 +39,13 @@ export default {
   },
   components: {},
   methods: {},
+  computed: {
+    siteTitle() {
+      return window.gds.filter((item, index) => {
+        return index == this.$route.params.id;
+      })[0];
+    },
+  },
   beforeMount(){
     this.sitename = document.getElementsByTagName("title")[0].innerText;
   },

@@ -7,6 +7,12 @@
       <div :class="ismobile ? 'column is-full mx-0 px-1' : 'column is-two-thirds'">
         <div class="columns is-desktop is-multiline is-centered">
           <div class="column is-full">
+            <div class="has-text-right is-small">
+              <span class="icon has-text-netflix-only is-medium">
+                <i :class="playicon"></i>
+              </span>
+              <span class="subtitle has-text-netflix-only">{{ playtext }}</span>
+            </div>
             <vue-plyr ref="plyr" v-bind:key="videokey">
               <video :poster="poster" :src="apiurl" class="video-content">
                 <source :src="apiurl" type="video/mp4" size="Original Format">
@@ -14,22 +20,37 @@
               </video>
             </vue-plyr>
             <div class="box has-background-black">
-              <div class="columns is-mobile is-multiline has-text-white">
-                <div class="column is-1">
-                  <div class="columns is-desktop is-multiline has-text-white is-centered is-vcentered">
-                    <div class="column is-full">
-                      <p class="subtitle has-text-weight-bold has-text-netflix-only"><i class="fas fa-video"></i></p>
-                    </div>
-                  </div>
-                </div>
-                <div :class="ismobile ? 'column is-11' : 'column is-7'">
+              <div class="columns is-desktop is-vcentered is-multiline is-mobile">
+                <div :class="ismobile ? 'column is-full' : 'column is-8'">
                     <p class="subtitle has-text-white has-text-weight-bold"> {{ decodeURIComponent(videoname.split('.').slice(0,-1).join('.')) }}</p>
                 </div>
-                <div :class="ismobile ? 'column is-hidden title has-text-weight-semibold has-text-right is-4' : 'column title has-text-weight-semibold has-text-right is-4'">
-                  <span class="icon has-text-netflix-only is-medium">
-                    <i :class="playicon"></i>
-                  </span>
-                  <span class="subtitle has-text-netflix-only ml-2">{{ playtext }}</span>
+                <div :class="ismobile ? 'column has-text-netflix has-text-centered is-medium is-3' : 'column has-text-netflix is-medium has-text-centered is-1'">
+                  <button class="button is-netflix-red" @click="modal=true;" v-tooltip.bottom-start="'Play Externally.'">
+                    <span class="icon">
+                      <i class="fas fa-external-link-square-alt fontonly"></i>
+                    </span>
+                  </button>
+                </div>
+                <div :class="ismobile ? 'column has-text-netflix has-text-centered is-medium is-3' : 'column has-text-netflix is-medium has-text-centered is-1'">
+                  <button class="button is-netflix-red" v-clipboard:copy="externalUrl" v-tooltip.bottom-start="'Copy Link'">
+                    <span class="icon">
+                      <i class="fa fa-copy fontonly"></i>
+                    </span>
+                  </button>
+                </div>
+                <div :class="ismobile ? 'column has-text-netflix has-text-centered is-medium is-3' : 'column has-text-netflix is-medium has-text-centered is-1'">
+                  <button class="button is-netflix-red" @click="downloadButton" v-tooltip.bottom-start="'Download Now.'">
+                    <span class="icon">
+                      <i class="fas fa-download fontonly"></i>
+                    </span>
+                  </button>
+                </div>
+                <div :class="ismobile ? 'column has-text-netflix has-text-centered is-medium is-3' : 'column has-text-netflix is-medium has-text-centered is-1'">
+                  <button class="button is-netflix-red" @click="subModal=true;" v-tooltip.bottom-start="'Load Custom Subtitles..'">
+                    <span class="icon">
+                      <i class="fas fa-closed-captioning fontonly"></i>
+                    </span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -97,59 +118,28 @@
               </footer>
             </div>
           </div>
-          <div class="column is-full">
-            <div class="box has-text-centered has-background-black">
-              <div class="columns is-centered is-vcentered is-multiline">
-                <div class="column is-quarter">
-                  <button class="button is-netflix-red is-rounded" v-clipboard:copy="externalUrl">
-                    <span class="icon is-small">
-                      <i class="fa fa-copy"></i>
-                    </span>
-                    <span>{{ ismobile ? 'Share Link' : 'Stream Link'}}</span>
-                  </button>
-                </div>
-                <div class="column is-quarter">
-                  <button class="button is-netflix-red is-rounded" @click="subModal=true;">
-                    <span class="icon">
-                      <i class="fa fa-upload"></i>
-                    </span>
-                    <span>Load Subtitles</span>
-                  </button>
-                </div>
-                <div v-if="ismobile" class="column is-quarter">
-                  <button class="button is-netflix-red is-rounded" @click="modal=true;">
-                    <span class="icon">
-                     <i class="fas fa-play"></i>
-                   </span>
-                   <span>External Players</span>
-                  </button>
-                </div>
-                <div class="column is-quarter">
-                  <button class="button is-netflix-red is-rounded" @click="downloadButton">
-                    <span class="icon">
-                     <i class="fas fa-download"></i>
-                   </span>
-                   <span>Download</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div :class="ismobile ? 'column is-centered is-vcentered is-one-third is-desktop golist' : 'column is-desktop is-centered is-vcentered is-one-third golist mt-4'" v-loading="loading">
         <div class="column is-full">
           <div class="columns is-mobile is-multiline is-centered is-vcentered">
-            <div class="column is-two-thirds">
-              <h2 class="title has-text-weight-bold has-text-danger">Continue Your Binge</h2>
+            <div :class="ismobile ? 'column is-full mx-0 my-0 py-1 px-0' : 'column is-two-thirds mx-0 px-0'">
+              <div class="field has-addons is-grouped">
+                <div class="control is-expanded has-icons-right is-dark">
+                  <input class="input is-rounded searchbar-input"  type="search" v-tooltip.bottom-start="'Filter Videos'" v-model="searchBarTerm" placeholder="Continue Your Binge / Search Videos Here..">
+                  <span class="icon has-text-netflix-only is-small is-right" style="padding:0 5px;">
+                    <i class="fas fa-search"></i>
+                  </span>
+                </div>
+              </div>
             </div>
-            <div class="column is-one-third">
-              <h6 class="subtitle has-text-right has-text-grey">Found {{ this.files ? this.files.length - 1 : "0" }} Results</h6>
+            <div :class="ismobile ? 'column is-full mx-0 my-0 px-0 py-1' : 'column is-one-third mx-0 px-0'">
+              <h6 class="has-text-right has-text-grey">Found {{ files ? files.length : "0" }} Results</h6>
             </div>
           </div>
         </div>
         <div class="column is-full">
-          <div class="columns has-background-dark suggestList is-multiline is-mobile is-centered is-vcentered" v-for="(file, index) in getFilteredFiles" v-bind:key="index" @click="action(file,'view')">
+          <div class="columns has-background-dark suggestList is-multiline is-mobile is-centered is-vcentered" v-for="(file, index) in files" v-bind:key="index" @click="action(file,'view')">
             <div class="column is-2">
               <svg class="iconfont" style="font-size: 20px">
                 <use :xlink:href="getIcon(file.mimeType)" />
@@ -245,6 +235,8 @@ export default {
       ismobile: false,
       user: {},
       token: {},
+      searchBarTerm: "",
+      searchBarfaIcon: "fab fa-searchengin",
       videokey: 0,
       mediaToken: "",
       modal: false,
@@ -314,10 +306,14 @@ export default {
               page_index: body.curPageIndex,
             };
             if ($state) {
-              this.files.push(...this.buildFiles(data.files));
+              this.originalFiles.push(...this.buildFiles(data.files));
+              this.files.push(this.getFilteredFiles(...this.buildFiles(data.files)));
+              this.checkSuburl();
               this.getPoster();
             } else {
-              this.files = this.buildFiles(data.files);
+              this.originalFiles = this.buildFiles(data.files)
+              this.files = this.getFilteredFiles(this.buildFiles(data.files));
+              this.checkSuburl();
               this.getPoster();
             }
           }
@@ -374,7 +370,7 @@ export default {
       const toks = this.videoname.split('.');
       const pathSansExt = toks.slice(0, -1).join('.');
       const regext = new RegExp(`(?<name>${pathSansExt})`+'\\.(?<label>[\\s\\S\\D]+)\\.(?<format>srt|vtt)');
-      return this.files.forEach(async (item) => {
+      return this.originalFiles.forEach(async (item) => {
          if(item.name == pathSansExt + ".srt" || item.name == pathSansExt + ".vtt"){
            let url = item.path+"?player=internal"+"&token="+this.token.token+"&email="+this.user.email;
            let blob = await this.getSrtFile(url);
@@ -477,7 +473,7 @@ export default {
       return "#" + (this.icon[type] ? this.icon[type] : "icon-weizhi");
     },
     getPoster() {
-      var data = this.files.filter((file) => {
+      var data = this.originalFiles.filter((file) => {
         return file.name == this.videoname
       })[0].thumbnailLink;
       this.poster = data;
@@ -525,17 +521,16 @@ export default {
         return;
       }
     },
-  },
-  computed: {
-    getFilteredFiles() {
-      this.checkSuburl();
+    getFilteredFiles(rawFiles) {
       const videoRegex = /(video)\/(.+)/
-      return this.files.filter(file => {
+      return rawFiles.filter(file => {
         return file.name != this.url.split('/').pop();
       }).filter(file => {
         return videoRegex.test(file.mimeType);
       });
     },
+  },
+  computed: {
     siteName() {
       return window.gds.filter((item, index) => {
         return index == this.$route.params.id;
@@ -652,6 +647,7 @@ export default {
     })
   },
   mounted() {
+    if(this.$audio.player() != undefined) this.$audio.destroy();
     this.checkMobile();
     this.render();
     if(window.themeOptions.loading_image){
@@ -663,6 +659,16 @@ export default {
     this.videoname = this.url.split('/').pop();
   },
   watch: {
+    searchBarTerm: function() {
+      if(this.searchBarTerm.length > 0){
+        const searchRegex = new RegExp(this.searchBarTerm.toLowerCase());
+        this.files = this.getFilteredFiles(this.originalFiles.filter((file) => {
+          return searchRegex.test(file.name.toLowerCase());
+        }));
+      } else {
+        this.files = this.getFilteredFiles(this.originalFiles);
+      }
+    },
     screenWidth: function() {
       var width = this.windowWidth > 0 ? this.windowWidth : this.screenWidth;
       if(width > 966){
@@ -682,15 +688,11 @@ export default {
     player: function(){
       this.player.on('ready', () => {
         this.playicon="fas fa-glasses";
-        this.playtext="Ready to Play !"
+        this.playtext="Let's Party"
       });
       this.player.on('loadstart', () => {
         this.playicon = "fas fa-spinner fa-pulse";
-        this.playtext = "Loading ...";
-      })
-      this.player.on('canplay', () => {
-        this.playicon="fas fa-glasses";
-        this.playtext="Party Started!"
+        this.playtext = "Loading Awesomeness..";
       })
       this.player.on('play', () => {
         this.$ga.event({eventCategory: this.videoname,eventAction: "Started Playing"+" - "+this.siteName,eventLabel: "Video Page"})

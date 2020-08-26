@@ -15,12 +15,12 @@
                           <span class="icon">
                             <i class="fab fa-superpowers"></i>
                           </span>
-                          <span> HeyAhh !</span>
+                          <span> Ahh!! Perfect !</span>
                         </p>
-                        <p class="subtitle">Welcome to 3flix</p>
+                        <p class="subtitle">Login</p>
                         <div class="content">
-                            <p class="has-text-dark has-text-weight-semibold">Access Our Wide Collection of Free Online Movies and TV</p>
-                            <p class="has-text-dark">Login to Continue</p>
+                            <p class="has-text-dark has-text-weight-semibold">Login to this Website to Continue.</p>
+                            <p class="has-text-dark">You are Just a Page from Experiencing the Glory.</p>
                             <button class="button mb-3" @click="hyInput = !hyInput">
                               <span class="icon">
                                 <i class="fas fa-dolly"></i>
@@ -382,6 +382,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
           },
         },
         mounted() {
+          if(this.$audio.player() != undefined) this.$audio.destroy();
           this.checkParams();
         },
         created() {

@@ -222,7 +222,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
           if(this.user.avatar){
             this.avatar = this.user.avatar;
           } else {
-            this.avatar = 'https://i.ibb.co/c2KP3rR/5f43aea35d7ac.png';
+            this.avatar = 'https://cdn.statically.io/img/www.joyonlineschool.com/static/emptyuserphoto.png?w=64&h=64&quality=100&f=auto';
           }
         },
         created() {

@@ -6,7 +6,7 @@
       <div class="columns is-multiline is-centered is-vcentered">
         <div class="column has-text-centered is-half">
           <h2 class="title has-text-weight-bold has-text-white">Invite Users</h2>
-          <p class="subtitle is-small has-text-white">(Please Use Considerably As We Have to Incur Mail Costs)</p>
+          <p class="subtitle is-small has-text-white">(Please Use Considerably As We Have to Incur Mail Costs.)</p>
           <article :class=" errorMessage ? 'message is-danger' : 'message is-hidden is-danger'">
             <div class="message-header">
               <p>Error Proccessing</p>
@@ -67,7 +67,7 @@
                 <div class="b-checkbox is-success is-circular is-inline">
                   <input class="styled has-text-success" type="checkbox" id="terms" name="terms" v-model="checked">
                   <label for="terms">
-                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/CONTRIBUTING.md" target="_blank">Community Guidelines</a></span>
+                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://raw.githubusercontent.com/tks18/gindex-v4/dark-mode-0-1/CONTRIBUTING.md" target="_blank">Community Guidelines</a></span>
                   </label>
                 </div>
               </div>
@@ -77,7 +77,7 @@
                 <div class="b-checkbox is-success is-circular is-inline">
                   <input class="styled has-text-success" type="checkbox" id="code" name="terms" v-model="codechecked">
                   <label for="code">
-                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/rafsanbasunia/gindex-v4/Terms_and_Conditions.md" target="_blank">Terms_and_Conditions</a></span>
+                    <span class="content has-text-white">  I Accept and Read the <a class="has-text-success" href="https://github.com/tks18/gindex-v4/blob/dark-mode-0-1/CODE_OF_CONDUCT.md" target="_blank">Code of Conduct</a></span>
                   </label>
                 </div>
               </div>
